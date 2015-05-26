@@ -4,6 +4,8 @@
 # Dependencies GNU Bash version 4.3. GNU Coreutils 8.21. Android Debug Bridge
 # Android device must be rooted!
 # Android Nbackup is a script that backs up your Android device contacts and text messages 
+# To see contact and sms data in text form
+# echo '.dump' | sqlite3 example.db > example.txt
 
 # Location of contact and sms data
 smsfile=/data/data/com.android.providers.telephony/databases/mmssms.db
