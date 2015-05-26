@@ -1,8 +1,34 @@
 #!/bin/bash
+# Android Nbackup version 1.0
+# Date 05-26-2015
+# Dependencies GNU Bash version 4.3. GNU Coreutils 8.21. Android Debug Bridge
+# Android device must be rooted!
+# Android Nbackup is a script that backs up your Android device contacts and text messages 
+
+# Location of contact and sms data
 smsfile=/data/data/com.android.providers.telephony/databases/mmssms.db
 contactsfile=/data/data/com.android.providers.contacts/databases/contacts2.db
 
-# run script with shell as root and copy data
+# Check to see if Device is connected
+devices=$(adb get-serialno)
+
+if [ "unknown" = "$devices" ]
+then
+echo "Device not connected"
+exit 1
+fi
+
+#Create .Phone_data dir
+
+if [ -d ~/.Phone_data ]
+then 
+true
+else
+mkdir ~/.Phone_data
+fi
+
+
+# Run script with shell as root and copy data
 
 adb shell "su -c cp $smsfile /sdcard/ && su -c cp $contactsfile /sdcard/ && exit"
 
@@ -13,7 +39,8 @@ adb pull /sdcard/contacts2.db ~/
 
 adb shell " rm /sdcard/*.db "
 
-# Check file size, needed incase Android auto deletes part of either file
+# Check file size, needed in case Android auto deletes part of either file.
+# If auto deletion occurs to avoid data loss the new file is copied to the Phone_data dir and dated.
 
 
 sizenewfilesms=$(stat -c%s ~/mmssms.db)
@@ -24,11 +51,11 @@ sizeoldfilecon=$(stat -c%s ~/.Phone_data/contacts2.db)
 
 if [[ "$sizenewfilesms" -lt "$sizeoldfilesms"  ]]
 then
-echo "Backup file mmssms.db is missing data do not overwrite!"
+echo "Backup file mmssms.db is missing data do not overwrite! Copying dated file to Phone_data dir."
 mv ~/mmssms.db ~/.Phone_data/"mmssms`date`.db"
 elif [[ "$sizenewfilecon" -lt "$sizeoldfilecon" ]]
 then
-echo "Backup file contacts2.db is missing data do not overwrite!"
+echo "Backup file contacts2.db is missing data do not overwrite! Copying dated file to Phone_data dir"
 mv ~/contacts2.db ~/.Phone_data/"contacts`date`.db"
 else
 
