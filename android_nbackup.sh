@@ -74,7 +74,7 @@ if [ $? -eq 0 ]
 then
 echo "SMS files are equal and up to date"
 else
-cp ~/mmssms.db ~/.Phone_data/mmssms.db
+cp ~/mmssms.db ~/.Phone_data/$devices/mmssms.db
 fi
 
 diff -adq --no-ignore-file-name-case ~/contacts2.db ~/.Phone_data/$devices/contacts2.db
@@ -83,7 +83,7 @@ if [ $? -eq 0 ]
 then
 echo "Contact files are equal and up to date"
 else
-cp ~/contacts2.db ~/.Phone_data/contacts2.db
+cp ~/contacts2.db ~/.Phone_data/$devices/contacts2.db
 fi
 
 #clean up
