@@ -29,6 +29,13 @@ else
 mkdir ~/.Phone_data
 fi
 
+#Create dir for specific phone based on serialno
+if [ -d ~/.Phone_data/$devices ]
+then
+true
+else
+mkdir ~/.Phone_data/$devices
+fi
 
 # Run script with shell as root and copy data
 
@@ -54,14 +61,14 @@ sizeoldfilecon=$(stat -c%s ~/.Phone_data/contacts2.db)
 if [[ "$sizenewfilesms" -lt "$sizeoldfilesms"  ]]
 then
 echo "Backup file mmssms.db is missing data do not overwrite! Copying dated file to Phone_data dir."
-mv ~/mmssms.db ~/.Phone_data/"mmssms`date`.db"
+mv ~/mmssms.db ~/.Phone_data/$devices/"mmssms`date`.db"
 elif [[ "$sizenewfilecon" -lt "$sizeoldfilecon" ]]
 then
 echo "Backup file contacts2.db is missing data do not overwrite! Copying dated file to Phone_data dir"
-mv ~/contacts2.db ~/.Phone_data/"contacts`date`.db"
+mv ~/contacts2.db ~/.Phone_data/$devices/"contacts`date`.db"
 else
 
-diff -adq --no-ignore-file-name-case ~/mmssms.db ~/.Phone_data/mmssms.db
+diff -adq --no-ignore-file-name-case ~/mmssms.db ~/.Phone_data/$devices/mmssms.db
 
 if [ $? -eq 0 ]
 then
@@ -70,7 +77,7 @@ else
 cp ~/mmssms.db ~/.Phone_data/mmssms.db
 fi
 
-diff -adq --no-ignore-file-name-case ~/contacts2.db ~/.Phone_data/contacts2.db
+diff -adq --no-ignore-file-name-case ~/contacts2.db ~/.Phone_data/$devices/contacts2.db
 
 if [ $? -eq 0 ]
 then
